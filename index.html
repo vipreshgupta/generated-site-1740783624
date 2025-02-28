@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Tap</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        nav ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ddd;
+        }
+
+        /* Main Content Styles */
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Game Canvas Styles */
+        #gameCanvas {
+            border: 5px solid #333;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Button Styles */
+        .button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Section Styles */
+        section {
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+        }
+
+        section h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        /* Leaderboard Styles */
+        #leaderboard {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        #leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #leaderboard th, #leaderboard td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        #leaderboard th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        /* Contact Form Styles */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .contact-form input, .contact-form textarea {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .contact-form button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            nav ul li {
+                display: block;
+                margin: 10px 0;
+            }
+
+            #gameCanvas {
+                width: 95%;
+                max-width: none;
+            }
+        }
+                /* Additional Styles for Animations and Interactivity */
+        .animated-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animated-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: left 0.3s ease;
+        }
+
+        .animated-button:hover::after {
+            left: 100%;
+        }
+        /* Styles for Game Instructions */
+        #instructions {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        #instructions p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        /* Styles for Score Display */
+        #scoreDisplay {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Color Tap</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#play">Play</a></li>
+                <li><a href="#leaderboard">Leaderboard</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <h2>Welcome to Color Tap!</h2>
+            <p>Tap the correct color as fast as you can to score points. Compete with players around the world!</p>
+            <img src="https://picsum.photos/id/10/400/200" alt="Game Screenshot" width="400" height="200">
+            <button class="button animated-button" onclick="location.href='#play'">Play Now</button>
+        </section>
+
+        <section id="play">
+            <h2>Play</h2>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <div id="instructions">
+                <p>Tap the circle that matches the displayed color name.</p>
+                <p>Score as many points as you can within the time limit!</p>
+            </div>
+            <div id="scoreDisplay">Score: 0</div>
+            <button class="button animated-button" onclick="startGame()">Start Game</button>
+        </section>
+
+        <section id="leaderboard">
+            <h2>Leaderboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Player1</td>
+                        <td>1000</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Player2</td>
+                        <td>900</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Player3</td>
+                        <td>800</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="about">
+            <h2>About</h2>
+            <p>Color Tap is a simple yet addictive game designed to test your reflexes and color recognition skills. Developed by [Your Name/Team Name].</p>
+            <p>Contact us for any support or inquiries.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Color Tap. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        let targetColor;
+        let colors = ['red', 'blue', 'green', 'yellow'];
+
+        function drawCircle(x, y, color) {
+            ctx.beginPath();
+            ctx.arc(x, y, 40, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawText(text, x, y, color) {
+            ctx.font = '24px Arial';
+            ctx.fillStyle = color;
+            ctx.textAlign = 'center';
+            ctx.fillText(text, x, y);
+        }
+
+        function generateRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function updateGameArea() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Generate random positions for circles
+            let positions = [
+                {x: 100, y: 100},
+                {x: 300, y: 100},
+                {x: 100, y: 300},
+                {x: 300, y: 300}
+            ];
+
+            // Shuffle positions
+            positions.sort(() => Math.random() - 0.5);
+
+            // Draw circles
+            for (let i = 0; i < colors.length; i++) {
+                drawCircle(positions[i].x, positions[i].y, colors[i]);
+            }
+
+            // Set target color and display text
+            targetColor = generateRandomColor();
+            drawText(targetColor.toUpperCase(), canvas.width / 2, canvas.height / 2, 'black');
+
+            // Update score display
+            scoreDisplay.textContent = 'Score: ' + score;
+        }
+
+        function checkClick(event) {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const clickY = event.clientY - rect.top;
+
+            let correctClick = false;
+            for (let i = 0; i < colors.length; i++) {
+                let positions = [
+                    {x: 100, y: 100},
+                    {x: 300, y: 100},
+                    {x: 100, y: 300},
+                    {x: 300, y: 300}
+                ];
+                positions.sort(() => Math.random() - 0.5);
+
+                const dx = clickX - positions[i].x;
+                const dy = clickY - positions[i].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 40 && colors[i] === targetColor) {
+                    correctClick = true;
+                    break;
+                }
+            }
+
+            if (correctClick) {
+                score++;
+            } else {
+                score--;
+            }
+
+            updateGameArea();
+        }
+
+        function startGame() {
+            score = 0;
+            timeLeft = 30;
+            updateGameArea();
+
+            if (gameInterval) {
+                clearInterval(gameInterval);
+            }
+
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(gameInterval);
+                    alert('Game Over! Your score: ' + score);
+                }
+            }, 1000);
+
+            canvas.addEventListener('click', checkClick);
+        }
+
+        // Initial setup
+        updateGameArea();
+    </script>
+</body>
+</html>
